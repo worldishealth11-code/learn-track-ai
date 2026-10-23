@@ -7,10 +7,20 @@
 body {
   font-family: Arial, sans-serif;
   background: #f5f7fc;
-  background-color: lch(45.06% 4.74 5.41);
+  background-color: hsl(0, 35%, 85%);
   
   
 }
+.h-2 {
+font-style: oblique;
+font-size: large;
+
+}
+.reg-1 {
+  background-color: pink;
+  max-height: 15px;
+}
+
 
 button,
 input {
@@ -640,9 +650,408 @@ footer strong {
     flex-direction: column;
   }
 }
+.center-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fcfcfc;
+  padding: 40px 20px;
+}
+.form-card {
+  background: white;
+  width: 100%;
+  max-width: 520px;
+  padding: 56px 48px;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 1px solid #f1f5f1;
+}
 
-    
-    
+.logout-button {
+  margin-top: 15px;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  background: #fff;
+  cursor: pointer;
+}
+.logout-button:hover {
+  background: #fee2e2;
+}
+/* Registration Page */
+
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f4f7ff;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 430px;
+  padding: 32px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.register-logo {
+  text-align: center;
+  color: #4f46e5;
+  margin-bottom: 8px;
+}
+
+.register-logo span {
+  color: #16a34a;
+}
+
+.register-subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.register-card h2 {
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.register-card label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 7px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.register-card input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 15px;
+}
+
+.register-card input:focus {
+  outline: 2px solid #c7d2fe;
+  border-color: #4f46e5;
+}
+
+.register-button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 24px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.register-button:hover {
+  background: #4338ca;
+}
+
+.register-error {
+  padding: 10px;
+  margin: 15px 0;
+  color: #b91c1c;
+  background: #fee2e2;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.register-footer {
+  margin-top: 25px;
+  text-align: center;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+
+@media (max-width: 480px) {
+  .register-page {
+    padding: 14px;
+  }
+
+  .register-card {
+    padding: 24px 18px;
+  }
+}
+    /* ==========================================================================
+   MY LEARNING GOALS STYLING
+   ========================================================================== */
+
+/* Layout for the inputs and button row */
+.panel  {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-direction: column;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Ensure form layout elements don't stack vertically */
+.panel input[type="text"],
+.panel input[type="date"] {
+  margin-bottom: 0 !important; 
+  padding: 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+.panel-input[type="text"] {
+  flex: 2;
+  min-width: 200px;
+}
+
+.panel-input[type="date"] {
+  flex: 1;
+  min-width: 150px;
+}
+
+.panel-button {
+  width: auto;
+  padding: 12px 24px;
+  white-space: nowrap;
+  ;
+}
+
+/* Individual Goal list items styling */
+.panel-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f7fafc;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #edf2f7;
+  margin-top: 10px;
+}
+
+.panel-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.goal-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.panel date {
+  font-size: 13px;
+  color: #718096;
+}
+
+/* Clean text button style for Delete */
+.panel-delete-btn {
+  background: none;
+  border: none;
+  color: #e53e3e;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.goal-delete-btn:hover {
+  background-color: #fff5f5;
+}
+.panel form button {
+  background-color: #667eea;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+cursor: pointer;
+white-space: nowrap;
+font-weight: 600;
+flex-direction: column;
+}/* ==========================================================================
+   ADDED GOALS LIST & DELETE BUTTON STYLING
+   =
+   ========================================================================= */
+
+/* Styles the container block for each goal item */
+.panel div[key], 
+.panel .goal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+/* Formats the goal title text */
+.panel h3, 
+.panel strong {
+  font-size: 16px;
+  color: #1a202c;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Formats the target date text */
+.panel p, 
+.panel small {
+  font-size: 13px;
+  color: #718096;
+}
+
+/* Styles the Delete button neatly */
+.panel button:not([type="submit"]):not(.primary-button) {
+  background-color: transparent;
+  color: #e53e3e;
+  border: 1px solid #fed7d7;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Delete button hover state */
+.panel button:not([type="submit"]):not(.primary-button):hover {
+  background-color: #fff5f5;
+  border-color: #f5c6cb;
+}
+
+/* --- Study Session Section Styling --- */
+.session-panel {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  margin: 20px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.session-panel h2 {
+  font-size: 1.6rem;
+  color: #333333;
+  margin-bottom: 16px;
+}
+
+/* Form Layout (Matches your grid style) */
+.session-form {
+  display: flex;
+  gap: 5opx;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.session-form input,
+.session-form select {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 16px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.session-form input:focus,
+.session-form select:focus {
+  border-color: #007bff;
+  width: 250px;
+  margin-right: 16px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+}
+
+/* Submit Button Style */
+.session-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 5px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-left: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.session-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Saved Sessions List Layout */
+.sessions-list-container {
+  margin-top: 16px;
+}
+
+.sessions-list-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.session-item {
+  background-color: #f8f9fa;
+  border-left: 4px solid #28a745; /* Green side accent */
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.session-item strong {
+  color: #212529;
+}
+
+/* Empty State / Error Alert Styling */
+.no-sessions {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  width: 100%;
+}
 
 
   

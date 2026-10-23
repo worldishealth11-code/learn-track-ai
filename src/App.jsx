@@ -31,6 +31,14 @@ const questions = [
 ];
 
 export default function App() {
+  // Registration
+  const [registered, setRegistered] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [registerError, setRegisterError] = useState("");
+
+  // Dashboard
   const [page, setPage] = useState("Dashboard");
   const [materials, setMaterials] = useState(initialMaterials);
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -39,7 +47,104 @@ export default function App() {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [search, setSearch] = useState("");
+const [sessions, setSessions] = useState([]);
+const [sessionGoalId ,setSessionGoalId] = useState('');
+const [sessionDuration, setSessionDuration] = useState('');
+const [sessionStatus, setSessionStatus] = useState('Upcoming');
 
+
+  // Handle registration
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setRegisterError("Please fill in all fields.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setRegisterError("Password must contain at least 6 characters.");
+      return;
+    }
+
+    setRegisterError("");
+    setRegistered(true);
+  };
+// My Goals feature
+// My Goals feature
+const [goals, setGoals] = useState(() => {
+  return JSON.parse(localStorage.getItem("learntrack_goals") || "[]");
+});
+
+const [goalTitle, setGoalTitle] = useState("");
+const [targetDate, setTargetDate] = useState("");
+
+const addGoal = () => {
+  if (!goalTitle.trim()) {
+    alert("Please enter a learning goal.");
+    return;
+  }
+
+  const newGoal = {
+    id: Date.now(),
+    title: goalTitle.trim(),
+    targetDate: targetDate,
+    completed: false,
+  };
+
+  const updatedGoals = [...goals, newGoal];
+
+  setGoals(updatedGoals);
+  localStorage.setItem(
+    "learntrack_goals",
+    JSON.stringify(updatedGoals)
+  );
+
+  setGoalTitle("");
+  setTargetDate("");
+};
+
+const deleteGoal = (id) => {
+  const updatedGoals = goals.filter((goal) => goal.id !== id);
+
+  setGoals(updatedGoals);
+  localStorage.setItem(
+    "learntrack_goals",
+    JSON.stringify(updatedGoals)
+  );
+};
+// Add Study Session
+  const addSession = (e) => {
+    if (e) e.preventDefault();
+
+    // Prevent blank entries
+    if (!sessionGoalId.trim() || !sessionDuration.trim()) {
+      setMessage("Please fill out all session fields.");
+      return;
+    }
+
+    const newSession = {
+      id: Date.now(),
+      goalId: sessionGoalId,
+      duration: sessionDuration,
+      status: sessionStatus
+    };
+
+    setSessions([...sessions, newSession]);
+
+    // Reset input fields
+    setSessionGoalId('');
+    setSessionDuration('');
+    setSessionStatus('Upcoming');
+  };
+const handleLogout = () => {
+  setRegistered(false);
+  setName("");
+setEmail("");
+setPassword("");
+setMessage("");
+};
+  // Add YouTube link
   const addYouTube = (e) => {
     e.preventDefault();
 
@@ -48,8 +153,8 @@ export default function App() {
       return;
     }
 
-    setMaterials([
-      ...materials,
+    setMaterials((previous) => [
+      ...previous,
       {
         id: Date.now(),
         title: youtubeUrl,
@@ -61,6 +166,7 @@ export default function App() {
     setMessage("YouTube link added successfully.");
   };
 
+  // Add PDF to the materials list
   const uploadPDF = (e) => {
     const file = e.target.files[0];
 
@@ -68,11 +174,12 @@ export default function App() {
 
     if (file.type !== "application/pdf") {
       setMessage("Please select a PDF file.");
+      e.target.value = "";
       return;
     }
 
-    setMaterials([
-      ...materials,
+    setMaterials((previous) => [
+      ...previous,
       {
         id: Date.now(),
         title: file.name,
@@ -83,18 +190,23 @@ export default function App() {
     setMessage(
       "PDF added to the list. Server upload is not connected yet."
     );
+
+    e.target.value = "";
   };
 
+  // Calculate quiz score
   const score = questions.reduce(
     (total, question, index) =>
       total + (answers[index] === question.answer ? 1 : 0),
     0
   );
 
+  // Search materials
   const filteredMaterials = materials.filter((material) =>
     material.title.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Restart quiz
   const restartQuiz = () => {
     setQuestionIndex(0);
     setAnswers({});
@@ -109,6 +221,72 @@ export default function App() {
     "Progress",
   ];
 
+  // REGISTRATION PAGE
+  if (!registered) {
+    return (
+      <div className="register-page">
+        <div className="register-card">
+          <h1 className="register-logo">
+            LearnTrack <span>AI</span>
+          </h1>
+
+          <p className="register-subtitle">
+            Your journey to smarter learning starts here.
+          </p>
+
+          <h2>CREATE ACCOUNT</h2>
+          <p>Join LearnTrack AI today.</p>
+
+          {registerError && (
+            <div className="register-error">{registerError}</div>
+          )}
+
+          <form onSubmit={handleRegister}>
+            <label htmlFor="register-name">Full Name</label>
+            <input
+              id="register-name"
+              type="text"
+              placeholder="Enter your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+
+            <label htmlFor="register-email">Email Address</label>
+            <input
+              id="register-email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+
+            <label htmlFor="register-password">Password</label>
+            <input
+              id="register-password"
+              type="password"
+              placeholder="Create a password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={6}
+              required
+            />
+
+            <button type="submit" className="register-button">
+              Create Account
+            </button>
+          </form>
+
+          <p className="register-footer">
+            LearnTrack AI — Smarter Learning. Better Results.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // NORMAL DASHBOARD
   return (
     <div className="app">
       <aside className="sidebar">
@@ -132,10 +310,13 @@ export default function App() {
         ))}
 
         <div className="profile">
-          <div className="avatar">S</div>
+          <div className="avatar">
+            {name.trim().charAt(0).toUpperCase()}
+          </div>
+
           <div>
-            <strong>Student</strong>
-            <small>Learning account</small>
+            <strong>{name}</strong>
+            <small>{email}</small>
           </div>
         </div>
       </aside>
@@ -147,9 +328,9 @@ export default function App() {
             placeholder="Search learning materials..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{pointerEvents: 'auto'}}
           />
-          <span className="topbar-label">Always on track</span>
+
+          <span className="topbar-label">Learn smarter</span>
         </header>
 
         {message && (
@@ -158,13 +339,14 @@ export default function App() {
             <button onClick={() => setMessage("")}>×</button>
           </div>
         )}
+        <button onClick={handleLogout}></button>
 
         {page === "Dashboard" && (
           <>
             <section className="welcome">
               <div>
                 <p className="eyebrow">YOUR LEARNING JOURNEY</p>
-                <h1>Welcome back! 👋</h1>
+                <h1>Welcome back, {name}! 👋</h1>
                 <p>
                   Organise your learning and make progress every day.
                 </p>
@@ -184,26 +366,44 @@ export default function App() {
                 value={materials.length}
                 color="blue"
               />
+
               <Stat
                 title="Summaries Created"
                 value="2"
                 color="purple"
               />
+
               <Stat
                 title="Quizzes Completed"
                 value={submitted ? "1" : "0"}
                 color="green"
               />
+
               <Stat
                 title="Quiz Progress"
                 value={
                   submitted
-                    ? `${Math.round((score / questions.length) * 100)}%`
+                    ? `${Math.round(
+                        (score / questions.length) * 100
+                      )}%`
                     : "0%"
                 }
                 color="orange"
               />
             </section>
+
+
+      <button style={{
+  backgroundColor: '#dc3545',
+  color: 'white',
+  padding: '8px 16px',
+  border: 'none',
+  cursor: 'pointer',
+  float: 'right'
+}}
+   onClick={handleLogout}>
+    Log Out</button>
+
 
             <section className="section">
               <div className="section-header">
@@ -251,6 +451,7 @@ export default function App() {
                 Add learning materials, review summaries, and take quizzes
                 to improve your knowledge.
               </p>
+
               <button
                 className="primary-button"
                 onClick={() => setPage("Quizzes")}
@@ -260,7 +461,75 @@ export default function App() {
             </section>
           </>
         )}
+{/* My Learning Goals */}
+<section className="panel">
+  <h2>My Learning Goals</h2>
 
+  <form
+    onSubmit={(e) => {
+      e.preventDefault();
+      addGoal();
+    }}
+  >
+    <input
+      type="text"
+      placeholder="Enter your learning goal"
+      value={goalTitle}
+      onChange={(e) => setGoalTitle(e.target.value)}
+    />
+
+    <input
+      type="date"
+      value={targetDate}
+      onChange={(e) => setTargetDate(e.target.value)}
+    />
+
+    <button className="button" type="submit">Add Goal</button>
+  </form>
+
+  {goals.length === 0 ? (
+    <p>No learning goals yet. Add your first goal above.</p>
+  ) : (
+    goals.map((goal) => (
+      <div key={goal.id}>
+        <strong>{goal.title}</strong>
+
+        {goal.targetDate && (
+          <p>Target date: {goal.targetDate}</p>
+        )}
+
+        <button
+          type="button"
+          onClick={() => deleteGoal(goal.id)}
+        >
+          Delete
+        </button>
+      </div>
+    ))
+  )}
+</section>
+{/* Study Session Form */}
+<section className="session-panel">
+  <h2>Study Session</h2>
+<form onSubmit={addSession} className="section-form">
+  <input 
+    type="text" 
+    placeholder="Session Goal ID" 
+    value={sessionGoalId} 
+    onChange={(e) => setSessionGoalId(e.target.value)} 
+  />
+  <input 
+    type="text" 
+    placeholder="Duration (e.g., 45 mins)" 
+    value={sessionDuration} 
+    onChange={(e) => setSessionDuration(e.target.value)} 
+  />
+  
+  {/* The button that triggers your new validation check */}
+  <button onClick={addSession} type="submit" className="session-btn">Add Session</button>
+  {message && <p style={{color: 'red', marginTop: '10px', className: 'error-message'}}>{message}</p>}
+</form>
+</section>
         {page === "My Materials" && (
           <>
             <PageHeading
@@ -272,6 +541,7 @@ export default function App() {
               <div className="panel">
                 <h2>Upload a PDF</h2>
                 <p>Select a PDF document from your computer.</p>
+
                 <input
                   type="file"
                   accept=".pdf,application/pdf"
@@ -281,6 +551,7 @@ export default function App() {
 
               <div className="panel">
                 <h2>Add a YouTube Link</h2>
+
                 <form onSubmit={addYouTube}>
                   <input
                     type="url"
@@ -289,6 +560,7 @@ export default function App() {
                     onChange={(e) => setYoutubeUrl(e.target.value)}
                     required
                   />
+
                   <button className="primary-button" type="submit">
                     Add Link
                   </button>
@@ -316,8 +588,8 @@ export default function App() {
                   <button
                     className="remove-button"
                     onClick={() =>
-                      setMaterials(
-                        materials.filter((item) => item.id !== material.id)
+                      setMaterials((previous) =>
+                        previous.filter((item) => item.id !== material.id)
                       )
                     }
                   >
@@ -426,10 +698,10 @@ export default function App() {
                             name={`question-${questionIndex}`}
                             checked={answers[questionIndex] === index}
                             onChange={() =>
-                              setAnswers({
-                                ...answers,
+                              setAnswers((previous) => ({
+                                ...previous,
                                 [questionIndex]: index,
-                              })
+                              }))
                             }
                           />
                           {option}
@@ -443,7 +715,7 @@ export default function App() {
                       className="secondary-button"
                       disabled={questionIndex === 0}
                       onClick={() =>
-                        setQuestionIndex(questionIndex - 1)
+                        setQuestionIndex((previous) => previous - 1)
                       }
                     >
                       Previous
@@ -453,7 +725,7 @@ export default function App() {
                       <button
                         className="primary-button"
                         onClick={() =>
-                          setQuestionIndex(questionIndex + 1)
+                          setQuestionIndex((previous) => previous + 1)
                         }
                       >
                         Next Question
@@ -471,9 +743,11 @@ export default function App() {
               ) : (
                 <div className="result">
                   <h2>Quiz Completed!</h2>
+
                   <p>
                     Your score: {score} out of {questions.length}
                   </p>
+
                   <p>
                     Percentage:{" "}
                     {Math.round((score / questions.length) * 100)}%
@@ -506,17 +780,25 @@ export default function App() {
             />
 
             <section className="stats">
-              <Stat title="Materials" value={materials.length} color="blue" />
+              <Stat
+                title="Materials"
+                value={materials.length}
+                color="blue"
+              />
+
               <Stat
                 title="Quizzes Completed"
                 value={submitted ? "1" : "0"}
                 color="green"
               />
+
               <Stat
                 title="Quiz Score"
                 value={
                   submitted
-                    ? `${Math.round((score / questions.length) * 100)}%`
+                    ? `${Math.round(
+                        (score / questions.length) * 100
+                      )}%`
                     : "—"
                 }
                 color="purple"
@@ -566,8 +848,4 @@ function PageHeading({ title, subtitle }) {
       <p>{subtitle}</p>
     </div>
   );
-}
-
-function restartQuiz() {
-  window.location.reload();
 }
