@@ -47,6 +47,11 @@ export default function App() {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [search, setSearch] = useState("");
+const [sessions, setSessions] = useState([]);
+const [sessionGoalId ,setSessionGoalId] = useState('');
+const [sessionDuration, setSessionDuration] = useState('');
+const [sessionStatus, setSessionStatus] = useState('Upcoming');
+
 
   // Handle registration
   const handleRegister = (e) => {
@@ -65,7 +70,80 @@ export default function App() {
     setRegisterError("");
     setRegistered(true);
   };
+// My Goals feature
+// My Goals feature
+const [goals, setGoals] = useState(() => {
+  return JSON.parse(localStorage.getItem("learntrack_goals") || "[]");
+});
 
+const [goalTitle, setGoalTitle] = useState("");
+const [targetDate, setTargetDate] = useState("");
+
+const addGoal = () => {
+  if (!goalTitle.trim()) {
+    alert("Please enter a learning goal.");
+    return;
+  }
+
+  const newGoal = {
+    id: Date.now(),
+    title: goalTitle.trim(),
+    targetDate: targetDate,
+    completed: false,
+  };
+
+  const updatedGoals = [...goals, newGoal];
+
+  setGoals(updatedGoals);
+  localStorage.setItem(
+    "learntrack_goals",
+    JSON.stringify(updatedGoals)
+  );
+
+  setGoalTitle("");
+  setTargetDate("");
+};
+
+const deleteGoal = (id) => {
+  const updatedGoals = goals.filter((goal) => goal.id !== id);
+
+  setGoals(updatedGoals);
+  localStorage.setItem(
+    "learntrack_goals",
+    JSON.stringify(updatedGoals)
+  );
+};
+// Add Study Session
+  const addSession = (e) => {
+    if (e) e.preventDefault();
+
+    // Prevent blank entries
+    if (!sessionGoalId.trim() || !sessionDuration.trim()) {
+      setMessage("Please fill out all session fields.");
+      return;
+    }
+
+    const newSession = {
+      id: Date.now(),
+      goalId: sessionGoalId,
+      duration: sessionDuration,
+      status: sessionStatus
+    };
+
+    setSessions([...sessions, newSession]);
+
+    // Reset input fields
+    setSessionGoalId('');
+    setSessionDuration('');
+    setSessionStatus('Upcoming');
+  };
+const handleLogout = () => {
+  setRegistered(false);
+  setName("");
+setEmail("");
+setPassword("");
+setMessage("");
+};
   // Add YouTube link
   const addYouTube = (e) => {
     e.preventDefault();
@@ -261,6 +339,7 @@ export default function App() {
             <button onClick={() => setMessage("")}>×</button>
           </div>
         )}
+        <button onClick={handleLogout}></button>
 
         {page === "Dashboard" && (
           <>
@@ -312,6 +391,19 @@ export default function App() {
                 color="orange"
               />
             </section>
+
+
+      <button style={{
+  backgroundColor: '#dc3545',
+  color: 'white',
+  padding: '8px 16px',
+  border: 'none',
+  cursor: 'pointer',
+  float: 'right'
+}}
+   onClick={handleLogout}>
+    Log Out</button>
+
 
             <section className="section">
               <div className="section-header">
@@ -369,7 +461,75 @@ export default function App() {
             </section>
           </>
         )}
+{/* My Learning Goals */}
+<section className="panel">
+  <h2>My Learning Goals</h2>
 
+  <form
+    onSubmit={(e) => {
+      e.preventDefault();
+      addGoal();
+    }}
+  >
+    <input
+      type="text"
+      placeholder="Enter your learning goal"
+      value={goalTitle}
+      onChange={(e) => setGoalTitle(e.target.value)}
+    />
+
+    <input
+      type="date"
+      value={targetDate}
+      onChange={(e) => setTargetDate(e.target.value)}
+    />
+
+    <button className="button" type="submit">Add Goal</button>
+  </form>
+
+  {goals.length === 0 ? (
+    <p>No learning goals yet. Add your first goal above.</p>
+  ) : (
+    goals.map((goal) => (
+      <div key={goal.id}>
+        <strong>{goal.title}</strong>
+
+        {goal.targetDate && (
+          <p>Target date: {goal.targetDate}</p>
+        )}
+
+        <button
+          type="button"
+          onClick={() => deleteGoal(goal.id)}
+        >
+          Delete
+        </button>
+      </div>
+    ))
+  )}
+</section>
+{/* Study Session Form */}
+<section className="session-panel">
+  <h2>Study Session</h2>
+<form onSubmit={addSession} className="section-form">
+  <input 
+    type="text" 
+    placeholder="Session Goal ID" 
+    value={sessionGoalId} 
+    onChange={(e) => setSessionGoalId(e.target.value)} 
+  />
+  <input 
+    type="text" 
+    placeholder="Duration (e.g., 45 mins)" 
+    value={sessionDuration} 
+    onChange={(e) => setSessionDuration(e.target.value)} 
+  />
+  
+  {/* The button that triggers your new validation check */}
+  <button onClick={addSession} type="submit" className="session-btn">Add Session</button>
+  {message && <p style={{color: 'red', marginTop: '10px', className: 'error-message'}}>{message}</p>}
+</form>
+</section>
         {page === "My Materials" && (
           <>
             <PageHeading
